@@ -2,20 +2,14 @@ package com.example.restservice;
 
 public class Car {
 
-    private final long id;
     private String carPlate;
     private String carBrand;
     private String carModel;
 
-    public Car(long id, String carPlate, String carBrand, String carModel) {
-        this.id = id;
+    public Car(String carPlate, String carBrand, String carModel) {
         this.carPlate = carPlate;
         this.carBrand = carBrand;
         this.carModel = carModel;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public String getCarPlate() {
