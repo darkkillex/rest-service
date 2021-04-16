@@ -2,9 +2,7 @@ package com.example.restservice;
 
 public class Car {
 
-    private String carPlate;
-    private String carBrand;
-    private String carModel;
+    private String carPlate, carBrand, carModel;
 
     public Car(String carPlate, String carBrand, String carModel) {
         this.carPlate = carPlate;

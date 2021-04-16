@@ -14,8 +14,10 @@ public class CarHandler {
         String plate = requestParams.get("plate");
         String brand = requestParams.get("brand");
         String model = requestParams.get("model");
-        return new Car(plate, brand, model);
+        return MockCars.searchCarByPlate(plate);
     }
+
+
 
 
 
