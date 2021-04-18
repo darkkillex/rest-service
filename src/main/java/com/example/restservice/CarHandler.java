@@ -1,22 +1,26 @@
 package com.example.restservice;
 
-import org.mockito.Mock;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @RestController
 public class CarHandler {
 
-    @GetMapping("/car")
-    public Car car(@RequestParam Map<String, String> requestParams) throws Exception {
-        String plate = requestParams.get("plate");
-        String brand = requestParams.get("brand");
-        String model = requestParams.get("model");
+    @GetMapping("/car/{plate}")
+    public Car car(@PathVariable String plate) {
         return MockCars.searchCarByPlate(plate);
     }
+
+    @GetMapping("/car")
+    public ArrayList<Car> listCars() {
+        return (ArrayList<Car>) MockCars.getListCar();
+    }
+
 
 
 

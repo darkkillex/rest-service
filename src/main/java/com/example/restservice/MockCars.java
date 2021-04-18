@@ -25,4 +25,7 @@ public class MockCars {
         return null;
     }
 
+    public static List<Car> getListCar() {
+        return listCar;
+    }
 }
