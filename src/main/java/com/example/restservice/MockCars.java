@@ -22,7 +22,7 @@ public class MockCars {
     }
 
 
-    public static Car searchCarByPlate(String plate) {
+    public static Car findByPlate(String plate) {
         for (Car car : listCar) {
             if (car.getCarPlate().equals(plate)) {
                 return car;

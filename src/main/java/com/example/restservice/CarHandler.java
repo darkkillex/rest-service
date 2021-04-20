@@ -9,7 +9,7 @@ public class CarHandler {
 
     @GetMapping("/car/{plate}")
     public Car car(@PathVariable String plate) {
-        return MockCars.searchCarByPlate(plate);
+        return MockCars.findByPlate(plate);
     }
 
 
@@ -24,6 +24,7 @@ public class CarHandler {
     public Car createCar(@RequestBody Car car) {
         return MockCars.saveCar(car);
     }
+
 
     @DeleteMapping("/car/{plate}")
     public List<Car> removeCar(@PathVariable String plate) {
