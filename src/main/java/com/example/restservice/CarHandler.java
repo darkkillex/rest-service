@@ -25,5 +25,11 @@ public class CarHandler {
         return MockCars.saveCar(car);
     }
 
+    @DeleteMapping("/car/{plate}")
+    public List<Car> removeCar(@PathVariable String plate) {
+        return MockCars.removeCarFromList(plate);
+    }
+
+
 
 }
