@@ -2,7 +2,6 @@ package com.example.restservice;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -22,6 +21,7 @@ public class MockCars {
         return list;
     }
 
+
     public static Car searchCarByPlate(String plate) {
         for (Car car : listCar) {
             if (car.getCarPlate().equals(plate)) {
@@ -31,7 +31,7 @@ public class MockCars {
         return null;
     }
 
-    public static List<Car> getListCar(String plate, String model, String brand) {
+    public static List<Car> getFilteredListCar(String plate, String model, String brand) {
         if (plate == null && model == null && brand == null) {
             return listCar;
         } else {
@@ -50,5 +50,9 @@ public class MockCars {
         }
     }
 
+    public static Car saveCar(Car car){
+        listCar.add(car);
+        return car;
+    }
 
 }
