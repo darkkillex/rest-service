@@ -1,5 +1,7 @@
 package com.example.restservice;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,10 +10,13 @@ import java.util.List;
 public class CarHandler {
 
     @GetMapping("/car/{plate}")
-    public Car car(@PathVariable String plate) {
-        return MockCars.findByPlate(plate);
+    public ResponseEntity<Car> searchCar(@PathVariable String plate) {
+        Car car = MockCars.findByPlate(plate);
+        if(car==null || car.getCarPlate().isEmpty()) {
+            throw new CustomException();
+        }
+        return new ResponseEntity<Car>(car,HttpStatus.OK);
     }
-
 
     @GetMapping("/car")
     public List<Car> listCar(@RequestParam(required = false) String plate,
@@ -25,11 +30,11 @@ public class CarHandler {
         return MockCars.saveCar(car);
     }
 
-
     @DeleteMapping("/car/{plate}")
     public List<Car> removeCar(@PathVariable String plate) {
         return MockCars.removeCarFromList(plate);
     }
+
 
 
 
