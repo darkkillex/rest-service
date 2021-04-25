@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class CarHandler {
+public class CarHandler extends RuntimeException{
 
     @GetMapping("/car/{plate}")
-    public ResponseEntity<Car> searchCar(@PathVariable String plate) {
+    public ResponseEntity<Car> searchCar(@PathVariable String plate){
         Car car = MockCars.findByPlate(plate);
         if(car==null || car.getCarPlate().isEmpty()) {
-            throw new CustomException();
+            throw new CustomException("value_not_found_GET", "plate", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<Car>(car,HttpStatus.OK);
     }
@@ -27,12 +27,19 @@ public class CarHandler {
 
     @PostMapping(path = "/car", consumes = "application/json", produces = "application/json")
     public Car createCar(@RequestBody Car car) {
+        if (car.getCarPlate()==null || car.getCarPlate().isEmpty()){
+            throw new CustomException("null_or_empty_value_POST", "plate", HttpStatus.BAD_REQUEST);
+        }
         return MockCars.saveCar(car);
     }
 
     @DeleteMapping("/car/{plate}")
-    public List<Car> removeCar(@PathVariable String plate) {
-        return MockCars.removeCarFromList(plate);
+    public ResponseEntity<Car> removeCar(@PathVariable String plate) {
+        Car car = MockCars.removeCarFromList(plate);
+        if (car==null || car.getCarPlate().isEmpty()){
+            throw new CustomException("null_or_empty_value_POST", "plate", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Car>(car,HttpStatus.OK);
     }
 
 
