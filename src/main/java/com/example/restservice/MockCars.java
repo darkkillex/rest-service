@@ -55,9 +55,13 @@ public class MockCars {
         return car;
     }
 
-    public static List<Car> removeCarFromList(String plate) {
-        Predicate<Car> carSelected = c -> c.getCarPlate().equals(plate);
-        listCar.removeIf(carSelected);
-        return listCar;
+    public static Car removeCarFromList(String plate) {
+        for (Car car : listCar) {
+            if (car.getCarPlate().equals(plate)) {
+                listCar.remove(car);
+                return car;
+            }
+        }
+        return null;
     }
 }
