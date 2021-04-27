@@ -1,0 +1,7 @@
+TO-DO:
+- Replace "if controls" in CarHandler class with a usefull method.
+- Multiple creation of a Car obj
+- Control on a unique plate for POST and PUT operation as well.
+
+Solved
+- Creation of unique IDs for car obj
