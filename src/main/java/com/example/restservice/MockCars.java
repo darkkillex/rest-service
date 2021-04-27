@@ -55,6 +55,7 @@ public class MockCars {
         return car;
     }
 
+
     public static Car removeCarFromList(String plate) {
         for (Car car : listCar) {
             if (car.getCarPlate().equals(plate)) {
@@ -63,5 +64,10 @@ public class MockCars {
             }
         }
         return null;
+    }
+
+    public static boolean isValidParameter(String parameter){
+
+        return true;
     }
 }
