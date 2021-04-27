@@ -9,11 +9,11 @@ import java.util.List;
 @RestController
 public class CarHandler extends RuntimeException {
 
-    @GetMapping("/car/{plate}")
-    public ResponseEntity<Car> searchCar(@PathVariable String plate) {
-        Car car = MockCars.findByPlate(plate);
+    @GetMapping("/car/{id}")
+    public ResponseEntity<Car> searchCar(@PathVariable int id) {
+        Car car = MockCars.findById(id);
         if (car == null || car.getCarPlate().isEmpty()) {
-            throw new CustomException("value_not_found_GET", "plate", HttpStatus.NOT_FOUND);
+            throw new CustomException("value_not_found_GET", "id", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Car>(car, HttpStatus.OK);
     }
@@ -39,11 +39,11 @@ public class CarHandler extends RuntimeException {
         return new ResponseEntity<Car>(MockCars.saveCar(car), HttpStatus.CREATED);
     }
 
-    @PutMapping("/car/{plate}")
-    public ResponseEntity<Car> updateCar(@RequestBody Car carDetails, @PathVariable String plate) {
-        Car car = MockCars.findByPlate(plate);
+    @PutMapping("/car/{id}")
+    public ResponseEntity<Car> updateCar(@RequestBody Car carDetails, @PathVariable int id) {
+        Car car = MockCars.findById(id);
         if (car== null) {
-            throw new CustomException("record_not_found_PUT", "plate", HttpStatus.NOT_FOUND);
+            throw new CustomException("record_not_found_PUT", "id", HttpStatus.NOT_FOUND);
         }
         if (carDetails.getCarPlate() == null || carDetails.getCarPlate().isEmpty()) {
             throw new CustomException("null_or_empty_value_POST", "plate", HttpStatus.BAD_REQUEST);
@@ -60,11 +60,11 @@ public class CarHandler extends RuntimeException {
         return new ResponseEntity<Car>(car, HttpStatus.OK);
     }
 
-    @DeleteMapping("/car/{plate}")
-    public ResponseEntity<Car> removeCar(@PathVariable String plate) {
-        Car car = MockCars.removeCarFromList(plate);
+    @DeleteMapping("/car/{id}")
+    public ResponseEntity<Car> removeCar(@PathVariable int id) {
+        Car car = MockCars.removeCarFromList(id);
         if (car == null || car.getCarPlate().isEmpty()) {
-            throw new CustomException("null_or_empty_value_POST", "plate", HttpStatus.NOT_FOUND);
+            throw new CustomException("null_or_empty_value_POST", "id", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Car>(car, HttpStatus.OK);
     }

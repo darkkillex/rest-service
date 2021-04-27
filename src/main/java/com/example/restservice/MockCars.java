@@ -12,19 +12,20 @@ public class MockCars {
 
     private static ArrayList<Car> setUpDataMock() {
         ArrayList<Car> list = new ArrayList<Car>();
-        list.add(new Car("123", "Peugeot", "3008"));
-        list.add(new Car("456", "Jeep", "Renegade"));
-        list.add(new Car("789", "Renault", "Capture"));
-        list.add(new Car("AAA", "Jeep", "Compass"));
-        list.add(new Car("BBB", "Renault", "Clio"));
-        list.add(new Car("12D", "Renault", "Clio"));
+        list.add(new Car("123","Peugeot", "3008"));
+        list.add(new Car("456","Jeep", "Renegade"));
+        list.add(new Car("789","Renault", "Capture"));
+        list.add(new Car("AAA","Jeep", "Compass"));
+        list.add(new Car("BBB","Renault", "Clio"));
+        list.add(new Car("12D","Renault", "Clio"));
+        System.out.println(list);
         return list;
     }
 
 
-    public static Car findByPlate(String plate) {
+    public static Car findById(int id) {
         for (Car car : listCar) {
-            if (car.getCarPlate().equals(plate)) {
+            if (car.getId() == id) {
                 return car;
             }
         }
@@ -56,9 +57,9 @@ public class MockCars {
     }
 
 
-    public static Car removeCarFromList(String plate) {
+    public static Car removeCarFromList(int id) {
         for (Car car : listCar) {
-            if (car.getCarPlate().equals(plate)) {
+            if (car.getId() == id) {
                 listCar.remove(car);
                 return car;
             }
@@ -66,8 +67,4 @@ public class MockCars {
         return null;
     }
 
-    public static boolean isValidParameter(String parameter){
-
-        return true;
-    }
 }
