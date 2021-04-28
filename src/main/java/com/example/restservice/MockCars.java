@@ -69,15 +69,23 @@ public class MockCars {
         return null;
     }
 
-    public static void isValidParameter(String parameter, String labelParameter,  HttpStatus httpStatus){
+    public static void checkValueParameter(String parameter, String labelParameter, HttpStatus httpStatus){
         if (parameter == null || parameter.isEmpty()){
             throw new CustomException("null_or_empty_value", labelParameter, httpStatus);
         }
     }
 
-    public static void isFoundObject(Car car, HttpStatus httpStatus){
+    public static void checkObjectIsNotNull(Car car){
         if (car == null){
-            throw new CustomException("record_not_found", "id", httpStatus);
+            throw new CustomException("record_not_found", "id", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public static void checkUniquePlate(String plate, HttpStatus httpStatus){
+        for (Car car : listCar) {
+            if (car.getCarPlate() == plate) {
+                throw new CustomException("car_already_exists", "plate", httpStatus);
+            }
         }
     }
 
