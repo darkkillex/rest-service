@@ -14,23 +14,22 @@ public class MockCars {
 
     private static ArrayList<Car> setUpDataMock() {
         ArrayList<Car> list = new ArrayList<Car>();
-        list.add(new Car("123","Peugeot", "3008"));
-        list.add(new Car("456","Jeep", "Renegade"));
-        list.add(new Car("789","Renault", "Capture"));
-        list.add(new Car("AAA","Jeep", "Compass"));
-        list.add(new Car("BBB","Renault", "Clio"));
-        list.add(new Car("12D","Renault", "Clio"));
+        list.add(new Car("123", "Peugeot", "3008"));
+        list.add(new Car("456", "Jeep", "Renegade"));
+        list.add(new Car("789", "Renault", "Capture"));
+        list.add(new Car("AAA", "Jeep", "Compass"));
+        list.add(new Car("BBB", "Renault", "Clio"));
+        list.add(new Car("12D", "Renault", "Clio"));
         return list;
     }
 
 
     public static Car findById(int id) {
-        for (Car car : listCar) {
-            if (car.getId() == id) {
-                return car;
-            }
-        }
-        return null;
+        Car filteredCar = listCar.stream()
+                .filter(car -> id == car.getId())
+                .findAny()
+                .orElse(null);
+        return filteredCar;
     }
 
     public static List<Car> getFilteredListCar(String plate, String model, String brand) {
@@ -38,49 +37,50 @@ public class MockCars {
             return listCar;
         } else {
             List<Predicate<Car>> allPredicates = new ArrayList<Predicate<Car>>();
-            if (plate!=null){
-                allPredicates.add(car->car.getCarPlate().equals(plate));
-            } if (model!=null) {
+            if (plate != null) {
+                allPredicates.add(car -> car.getCarPlate().equals(plate));
+            }
+            if (model != null) {
                 allPredicates.add(car -> car.getCarModel().equals(model));
-            } if(brand!=null) {
+            }
+            if (brand != null) {
                 allPredicates.add(car -> car.getCarBrand().equals(brand));
             }
             List<Car> filteredListCar = listCar.stream()
-                    .filter(allPredicates.stream().reduce(car->true, Predicate::and))
+                    .filter(allPredicates.stream().reduce(car -> true, Predicate::and))
                     .collect(Collectors.toList());
             return filteredListCar;
         }
     }
 
-    public static Car saveCar(Car car){
+    public static Car saveCar(Car car) {
         listCar.add(car);
         return car;
     }
 
 
     public static Car removeCarFromList(int id) {
-        for (Car car : listCar) {
-            if (car.getId() == id) {
-                listCar.remove(car);
-                return car;
-            }
-        }
-        return null;
+        Car filteredCar = listCar.stream()
+                .filter(car -> id == car.getId())
+                .findAny()
+                .orElse(null);
+        listCar.remove(filteredCar);
+        return filteredCar;
     }
 
-    public static void checkValueParameter(String parameter, String labelParameter){
-        if (parameter == null || parameter.isEmpty()){
+    public static void checkValueParameter(String parameter, String labelParameter) {
+        if (parameter == null || parameter.isEmpty()) {
             throw new CustomException("field_not_found_or_empty", labelParameter, HttpStatus.BAD_REQUEST);
         }
     }
 
-    public static void checkObjectIsNotNull(Car car){
-        if (car == null){
+    public static void checkObjectIsNotNull(Car car) {
+        if (car == null) {
             throw new CustomException("record_not_found", "id", HttpStatus.NOT_FOUND);
         }
     }
 
-    public static void checkUniquePlate(String plate){
+    public static void checkUniquePlate(String plate) {
         for (Car carStored : listCar) {
             if (carStored.getCarPlate().equals(plate)) {
                 throw new CustomException("car_already_exists", "carPlate", HttpStatus.CONFLICT);

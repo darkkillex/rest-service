@@ -3,7 +3,9 @@ TO-DO:
 - Multiple creation of a Car obj
 
 
+
 Solved
 - Creation of unique IDs for car obj
 - Replace "if controls" in CarHandler class with a usefull method
 - Control on a unique plate for POST and PUT operation as well.
+- Implement filter methods with Stream filter()
