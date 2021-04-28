@@ -1,5 +1,7 @@
 package com.example.restservice;
 
+import org.springframework.http.HttpStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -65,6 +67,18 @@ public class MockCars {
             }
         }
         return null;
+    }
+
+    public static void isValidParameter(String parameter, String labelParameter,  HttpStatus httpStatus){
+        if (parameter == null || parameter.isEmpty()){
+            throw new CustomException("null_or_empty_value", labelParameter, httpStatus);
+        }
+    }
+
+    public static void isFoundObject(Car car, HttpStatus httpStatus){
+        if (car == null){
+            throw new CustomException("record_not_found", "id", httpStatus);
+        }
     }
 
 }
