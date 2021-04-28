@@ -25,10 +25,10 @@ public class CarHandler extends RuntimeException {
 
     @PostMapping(path = "/car", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        MockCars.checkValueParameter(car.getCarPlate(), "plate", HttpStatus.BAD_REQUEST);
-        MockCars.checkValueParameter(car.getCarModel(), "model",HttpStatus.BAD_REQUEST);
-        MockCars.checkValueParameter(car.getCarBrand(), "brand",HttpStatus.BAD_REQUEST);
-        MockCars.checkUniquePlate(car.getCarPlate(), HttpStatus.CONFLICT);
+        MockCars.checkValueParameter(car.getCarPlate(), "carPlate");
+        MockCars.checkValueParameter(car.getCarModel(), "carModel");
+        MockCars.checkValueParameter(car.getCarBrand(), "carBrand");
+        MockCars.checkUniquePlate(car.getCarPlate());
         return new ResponseEntity<Car>(MockCars.saveCar(car), HttpStatus.CREATED);
     }
 
@@ -36,9 +36,10 @@ public class CarHandler extends RuntimeException {
     public ResponseEntity<Car> updateCar(@RequestBody Car carDetails, @PathVariable int id) {
         Car car = MockCars.findById(id);
         MockCars.checkObjectIsNotNull(car);
-        MockCars.checkValueParameter(carDetails.getCarPlate(), "plate",HttpStatus.BAD_REQUEST);
-        MockCars.checkValueParameter(carDetails.getCarModel(), "model",HttpStatus.BAD_REQUEST);
-        MockCars.checkValueParameter(carDetails.getCarBrand(), "brand",HttpStatus.BAD_REQUEST);
+        MockCars.checkValueParameter(carDetails.getCarPlate(), "carPlate");
+        MockCars.checkValueParameter(carDetails.getCarModel(), "carModel");
+        MockCars.checkValueParameter(carDetails.getCarBrand(), "carBrand");
+        MockCars.checkUniquePlate(carDetails.getCarPlate());
         car.setCarPlate(carDetails.getCarPlate());
         car.setCarModel(carDetails.getCarModel());
         car.setCarBrand(carDetails.getCarBrand());

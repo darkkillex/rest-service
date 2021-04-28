@@ -20,7 +20,6 @@ public class MockCars {
         list.add(new Car("AAA","Jeep", "Compass"));
         list.add(new Car("BBB","Renault", "Clio"));
         list.add(new Car("12D","Renault", "Clio"));
-        System.out.println(list);
         return list;
     }
 
@@ -69,9 +68,9 @@ public class MockCars {
         return null;
     }
 
-    public static void checkValueParameter(String parameter, String labelParameter, HttpStatus httpStatus){
+    public static void checkValueParameter(String parameter, String labelParameter){
         if (parameter == null || parameter.isEmpty()){
-            throw new CustomException("null_or_empty_value", labelParameter, httpStatus);
+            throw new CustomException("field_not_found_or_empty", labelParameter, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -81,10 +80,10 @@ public class MockCars {
         }
     }
 
-    public static void checkUniquePlate(String plate, HttpStatus httpStatus){
-        for (Car car : listCar) {
-            if (car.getCarPlate() == plate) {
-                throw new CustomException("car_already_exists", "plate", httpStatus);
+    public static void checkUniquePlate(String plate){
+        for (Car carStored : listCar) {
+            if (carStored.getCarPlate().equals(plate)) {
+                throw new CustomException("car_already_exists", "carPlate", HttpStatus.CONFLICT);
             }
         }
     }
