@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class ErrorHandler {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(value = CustomException.class)
+    @ExceptionHandler(value = CustomException.class)
     @ResponseBody
     public ResponseEntity<Map<String, String>> handleAllExceptions(CustomException ex) {
         return errorResponse(ex.getMessage(), ex.getParameter(), ex.getStatusCode());
