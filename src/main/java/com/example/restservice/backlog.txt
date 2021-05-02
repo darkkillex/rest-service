@@ -1,11 +1,20 @@
 TO-DO:
-- Increment ID only when POST is triggered
-- Multiple creation of a Car obj
-
+- Create a Class(i.e. UtilityHandler) to manage global methods (like addMetricToRequest())
+- Manage custom counter metric also when an Exception is triggered
+- Move other global method (like checkObjectIsNotNull) in the UtilityHandler
+- Check if ID increment only when POST is triggered
+- Set up of :
+    *Prometheus: Stores our metric data - NOT YET
+    *Grafana: Visualizes our data in graphs - NOT YET
+- Refactor MockCars.findById implement a fully functional approach (ref. "remove" operation)
 
 
 Solved
+- Set up of :
+    *Micrometer:
+        Exposes the metrics from the application - DONE;
+        Implement a new metric: counter for each request done (POST, PUT, DELETE, UPDATE)
 - Creation of unique IDs for car obj
-- Replace "if controls" in CarHandler class with a usefull method
+- Replace "if controls" in CarHandler class with a useful method
 - Control on a unique plate for POST and PUT operation as well.
 - Implement filter methods with Stream filter()
