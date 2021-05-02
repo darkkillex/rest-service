@@ -12,9 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 @ControllerAdvice
-public class ExceptionInterceptor {
+public class ExceptionHandler {
 
-    @ExceptionHandler(value = CustomException.class)
+    @org.springframework.web.bind.annotation.ExceptionHandler(value = CustomException.class)
     @ResponseBody
     public ResponseEntity<Map<String, String>> handleAllExceptions(CustomException ex) {
         return errorResponse(ex.getMessage(), ex.getParameter(), ex.getStatusCode());
