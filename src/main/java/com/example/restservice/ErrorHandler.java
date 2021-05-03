@@ -1,5 +1,6 @@
 package com.example.restservice;
 
+import io.micrometer.core.annotation.Timed;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Timed //http_server_requests_seconds
 @ControllerAdvice
 public class ErrorHandler {
 
