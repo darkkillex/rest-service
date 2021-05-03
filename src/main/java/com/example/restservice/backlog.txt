@@ -1,8 +1,8 @@
 TO-DO:
-- Create a Class(i.e. UtilityHandler) to manage global methods (like addMetricToRequest())
-- Manage custom counter metric also when an Exception is triggered
+- Manage a bug on POST op, triggered when a JSOn format is not valid (missing curly brackets or quotes)
+- Create a Class(i.e. UtilityHandler) to manage generic methods (like addMetricToRequest())
 - Move other global method (like checkObjectIsNotNull) in the UtilityHandler
-- Check if ID increment only when POST is triggered
+- Check if ID increment only when POST is triggered(not PUT op)
 - Set up of :
     *Prometheus: Stores our metric data - NOT YET
     *Grafana: Visualizes our data in graphs - NOT YET
@@ -18,3 +18,4 @@ Solved
 - Replace "if controls" in CarHandler class with a useful method
 - Control on a unique plate for POST and PUT operation as well.
 - Implement filter methods with Stream filter()
+- Manage custom counter metric also when an Exception is triggered
