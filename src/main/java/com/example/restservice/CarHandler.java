@@ -1,13 +1,10 @@
 package com.example.restservice;
 
 import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Timed
@@ -17,7 +14,7 @@ public class CarHandler extends RuntimeException {
     @GetMapping("/car/{id}")
     public ResponseEntity<Car> searchCar(@PathVariable int id) {
         Car car = MockCars.findById(id);
-        MockCars.checkObjectIsNotNull(car);
+        UtilityHandler.checkObjectIsNotNull(car);
         return new ResponseEntity<Car>(car, HttpStatus.OK);
     }
 
@@ -30,9 +27,9 @@ public class CarHandler extends RuntimeException {
 
     @PostMapping(path = "/car", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Car> createCar(@RequestBody Car car) {
-        MockCars.checkValueParameter(car.getCarPlate(), "carPlate");
-        MockCars.checkValueParameter(car.getCarModel(), "carModel");
-        MockCars.checkValueParameter(car.getCarBrand(), "carBrand");
+        UtilityHandler.checkValueParameter(car.getCarPlate(), "carPlate");
+        UtilityHandler.checkValueParameter(car.getCarModel(), "carModel");
+        UtilityHandler.checkValueParameter(car.getCarBrand(), "carBrand");
         MockCars.checkUniquePlate(car.getCarPlate());
         return new ResponseEntity<Car>(MockCars.saveCar(car), HttpStatus.CREATED);
     }
@@ -40,10 +37,10 @@ public class CarHandler extends RuntimeException {
     @PutMapping("/car/{id}")
     public ResponseEntity<Car> updateCar(@RequestBody Car carDetails, @PathVariable int id) {
         Car car = MockCars.findById(id);
-        MockCars.checkObjectIsNotNull(car);
-        MockCars.checkValueParameter(carDetails.getCarPlate(), "carPlate");
-        MockCars.checkValueParameter(carDetails.getCarModel(), "carModel");
-        MockCars.checkValueParameter(carDetails.getCarBrand(), "carBrand");
+        UtilityHandler.checkObjectIsNotNull(car);
+        UtilityHandler.checkValueParameter(carDetails.getCarPlate(), "carPlate");
+        UtilityHandler.checkValueParameter(carDetails.getCarModel(), "carModel");
+        UtilityHandler.checkValueParameter(carDetails.getCarBrand(), "carBrand");
         MockCars.checkUniquePlate(carDetails.getCarPlate());
         car.setCarPlate(carDetails.getCarPlate());
         car.setCarModel(carDetails.getCarModel());
@@ -54,7 +51,7 @@ public class CarHandler extends RuntimeException {
     @DeleteMapping("/car/{id}")
     public ResponseEntity<Car> removeCar(@PathVariable int id) {
         Car car = MockCars.removeCarFromList(id);
-        MockCars.checkObjectIsNotNull(car);
+        UtilityHandler.checkObjectIsNotNull(car);
         return new ResponseEntity<Car>(car, HttpStatus.OK);
     }
 
