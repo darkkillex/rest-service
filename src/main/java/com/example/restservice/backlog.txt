@@ -5,7 +5,7 @@ TO-DO:
     *Prometheus: Stores our metric data - NOT YET
     *Grafana: Visualizes our data in graphs - NOT YET
 - Refactor MockCars.findById implement a fully functional approach (ref. "remove" operation)
-
+- Create an injection service to test this rest-service
 
 Solved
 - Set up of :
