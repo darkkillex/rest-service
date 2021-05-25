@@ -25,11 +25,14 @@ def push_single_car():
             'carBrand': fake.vehicle_make(),
             'carModel': fake.vehicle_model()
         }
-        dict_cars.append(car)
         url = "http://localhost:9090/car"
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers)
         logging.info("Request n° %d - Status code: %d", i+1, resp.status_code)
+        if resp.status_code == 400:
+            logging.error("ERROR %d. Injection failed on object n° %d", resp.status_code, i+1)
+            return "Injection FAILED"
+        dict_cars.append(car)
     logging.info("End of data injection")
     return jsonify(dict_cars)
 
