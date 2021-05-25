@@ -1,4 +1,5 @@
 import json
+import logging
 
 import requests
 from flask import Flask, jsonify
@@ -10,12 +11,15 @@ app = Flask(__name__)
 fake = Faker('it_IT')
 fake.add_provider(VehicleProvider)
 
+logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
 dict_cars = []
 
 
 @app.route('/injectdata')
 def push_single_car():
-    for _ in range(10):
+    logging.info("Start data injection")
+    for i in range(10):
         car = {
             'carPlate': fake.license_plate(),
             'carBrand': fake.vehicle_make(),
@@ -25,8 +29,8 @@ def push_single_car():
         url = "http://localhost:9090/car"
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers)
-        print(resp.json())
-        print(resp.status_code)
+        logging.info("Request n° %d - Status code: %d", i+1, resp.status_code)
+    logging.info("End of data injection")
     return jsonify(dict_cars)
 
 
