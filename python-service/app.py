@@ -1,7 +1,8 @@
 import json
 import logging
-
 import requests
+
+from requests import ReadTimeout, ConnectionError, HTTPError, Timeout
 from flask import Flask, jsonify
 from faker import Faker
 from faker_vehicle import VehicleProvider
@@ -27,8 +28,13 @@ def push_single_car():
         }
         url = "http://localhost:9090/car"
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
-        resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers)
-        logging.info("Request n° %d - Status code: %d", i+1, resp.status_code)
+        try:
+            resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
+            logging.info("Request n° %d - Status code: %d", i+1, resp.status_code)
+        except (ReadTimeout, ConnectionError, HTTPError, Timeout) as e:
+            logging.error("Exception occurs on data injection. Technical details given below:")
+            logging.error(e)
+            return "Injection FAILED. Remote service unreachable", 500
         if resp.status_code != 201:
             logging.error("ERROR %d. Injection failed on object n° %d", resp.status_code, i+1)
             return "Injection FAILED", 400
