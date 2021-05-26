@@ -29,12 +29,12 @@ def push_single_car():
         headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers)
         logging.info("Request n° %d - Status code: %d", i+1, resp.status_code)
-        if resp.status_code == 400:
+        if resp.status_code != 201:
             logging.error("ERROR %d. Injection failed on object n° %d", resp.status_code, i+1)
-            return "Injection FAILED"
+            return "Injection FAILED", 400
         dict_cars.append(car)
     logging.info("End of data injection")
-    return jsonify(dict_cars)
+    return jsonify(dict_cars), 201
 
 
 if __name__ == '__main__':
