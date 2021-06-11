@@ -66,9 +66,11 @@ def create_request(car):
 
 @app.route('/injectdata')
 def inject_data():
+    start_time = time()
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars())
     logging.info("END of Data Injection")
+    logging.info('Duration of data Injection %s', time() - start_time)
     return jsonify(list_results)
 
 
