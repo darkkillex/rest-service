@@ -17,6 +17,10 @@ fake = Faker('it_IT')
 fake.add_provider(VehicleProvider)
 counter_lock = Lock()
 counter = Value('i', 0)  # defaults to 0
+counter_err = Value('i', 0)  # defaults to 0
+counter_ok = Value('i', 0)
+counter_success = 0
+counter_error = 0
 num_jobs = 10
 num_cars = 100
 
@@ -47,6 +51,7 @@ def create_list_cars():
 
 
 def create_request(car):
+    global counter_success, counter_error
     counter_thread = counter_increment(counter)
     url = "http://localhost:9090/car"
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
@@ -57,8 +62,10 @@ def create_request(car):
                       "Technical details given below:", counter_thread)
         logging.error(e)
     if resp.status_code != 201:
+        counter_error = counter_increment(counter_err)
         logging.error("ERROR %d. Injection FAILED on object n° %d", resp.status_code, counter_thread)
     else:
+        counter_success = counter_increment(counter_ok)
         logging.info("Injection SUCCESS on object n° %d", counter_thread)
     return {'Car Plate': car['carPlate'],
             'Status code': resp.status_code}
@@ -70,7 +77,9 @@ def inject_data():
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars())
     logging.info("END of Data Injection")
-    logging.info('Duration of data Injection %s', time() - start_time)
+    logging.info("Duration of data Injection %s", time() - start_time)
+    logging.info("Successful requests: %d", counter_success)
+    logging.info("Error requests occurred: %d", counter_error)
     return jsonify(list_results)
 
 
