@@ -3,7 +3,9 @@ package com.example.restservice;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -70,7 +72,9 @@ public class MockCars {
 
 
     public static void checkUniquePlate(String plate) {
-        for (Car carStored : listCar) {
+        CopyOnWriteArrayList<Car> listCarCopy = new CopyOnWriteArrayList<>(listCar);
+        for(Iterator<Car> iterator = listCarCopy.iterator(); iterator.hasNext();){
+            Car carStored = iterator.next();
             if (carStored.getCarPlate().equals(plate)) {
                 throw new CustomException("car_already_exists", "carPlate", HttpStatus.CONFLICT);
             }
