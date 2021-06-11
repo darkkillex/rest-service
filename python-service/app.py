@@ -1,5 +1,7 @@
 import json
 import logging
+from time import time
+
 import requests
 
 from requests import ReadTimeout, ConnectionError, HTTPError, Timeout
@@ -7,7 +9,7 @@ from flask import Flask, jsonify
 from faker import Faker
 from faker_vehicle import VehicleProvider
 from multiprocessing import Value, Lock
-
+from multiprocessing.pool import ThreadPool
 
 app = Flask(__name__)
 
@@ -20,7 +22,11 @@ num_cars = 100
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
-dict_cars = []
+
+def counter_increment(self):
+    with counter_lock:
+        self.value += 1
+    return self.value
 
 
 def create_single_fake_car():
@@ -32,45 +38,38 @@ def create_single_fake_car():
     return car
 
 
-def add_single_fake_car_to_list_cars():
-    global dict_cars
-    for car in range(num_cars):
-        dict_cars.append(create_single_fake_car())
-    return dict_cars
-
-
-
+def create_list_cars():
+    list_cars = []
+    for n_car in range(num_cars):
+        list_cars.append(create_single_fake_car())
+    logging.info('N° %d Cars was added to list', n_car + 1)
+    return list_cars
 
 
 def create_request(car):
-    global dict_cars
     counter_thread = counter_increment(counter)
-    #logging.info("Start Data Injection TASK N° %d", counter_thread)
     url = "http://localhost:9090/car"
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
-        logging.info("Injection N° %d. Status code: %d", counter_thread, resp.status_code)
     except (ReadTimeout, ConnectionError, HTTPError, Timeout) as e:
-        logging.error("Exception occurs on data injection. Technical details given below:")
+        logging.error("Injection N° %d FAILED. Exception occurs on data injection. "
+                      "Technical details given below:", counter_thread)
         logging.error(e)
-        return "Injection FAILED. Remote service unreachable", 500
     if resp.status_code != 201:
-        logging.error("ERROR %d. Injection failed on object n° %d", resp.status_code, counter_thread)
-        return "Injection FAILED", 400
-    dict_cars.append(car)
-    logging.info("End of data injection N° %d", counter_thread)
-    return jsonify(car)
+        logging.error("ERROR %d. Injection FAILED on object n° %d", resp.status_code, counter_thread)
+    else:
+        logging.info("Injection SUCCESS on object n° %d", counter_thread)
+    return {'Car Plate': car['carPlate'],
+            'Status code': resp.status_code}
 
 
-
-def counter_increment(self):
-    with counter_lock:
-        self.value += 1
-    return self.value
-
-
-
+@app.route('/injectdata')
+def inject_data():
+    pool_threads = ThreadPool(num_jobs)
+    list_results = pool_threads.map(create_request, create_list_cars())
+    logging.info("END of Data Injection")
+    return jsonify(list_results)
 
 
 if __name__ == '__main__':
