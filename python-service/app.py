@@ -53,7 +53,8 @@ def create_list_cars():
 def create_request(car):
     global counter_success, counter_error
     counter_thread = counter_increment(counter)
-    url = "http://localhost:9090/car"
+    print('I am in the request function')
+    url = "http://java-container:9090/car"
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
@@ -85,3 +86,4 @@ def inject_data():
 
 if __name__ == '__main__':
     app.run()
+    print("I am in the main")
