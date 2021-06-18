@@ -1,0 +1,35 @@
+version : "3.9"
+
+services:
+  java-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./java-service
+    image: java-service:latest
+    container_name: java-container
+    ports:
+      - "9090:8080"
+    networks:
+      - mynet
+
+  python-service:
+    build:
+      dockerfile: Dockerfile
+      context: ./python-service
+    image: python-service:latest
+    container_name: python-container
+    #Setting PYTHONUNBUFFERED=TRUE or PYTHONUNBUFFERED=1 (they are equivalent)
+    #allows for log messages to be immediately dumped to the stream instead of
+    #being buffered. This is useful for receiving timely log messages and
+    #avoiding situations where the application crashes without emitting a
+    #relevant message due to the message being "stuck" in a buffer.
+    environment:
+       - PYTHONUNBUFFERED=1
+    ports:
+      - "5000:5000"
+    networks:
+      - mynet
+
+networks:
+  mynet:
+    driver: bridge
