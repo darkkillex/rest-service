@@ -5,7 +5,7 @@ from time import time
 import requests
 
 from requests import ReadTimeout, ConnectionError, HTTPError, Timeout
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from faker import Faker
 from faker_vehicle import VehicleProvider
 from multiprocessing import Value, Lock
@@ -22,7 +22,6 @@ counter_ok = Value('i', 0)
 counter_success = 0
 counter_error = 0
 num_jobs = 10
-num_cars = 100
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
@@ -42,12 +41,21 @@ def create_single_fake_car():
     return car
 
 
-def create_list_cars():
+def create_list_cars(num_cars):
     list_cars = []
     for n_car in range(num_cars):
         list_cars.append(create_single_fake_car())
     logging.info('N° %d Cars was added to list', n_car + 1)
     return list_cars
+
+
+def get_car_number_from_url_parameter():
+    number_of_cars_parameter = request.args.get('cars')
+    if number_of_cars_parameter is None:
+        number_of_cars_parameter = 100  # default value of car injected
+    else:
+        number_of_cars_parameter = int(number_of_cars_parameter)
+    return number_of_cars_parameter
 
 
 def create_request(car):
@@ -56,6 +64,8 @@ def create_request(car):
     # don't use localhost for the communication between container.
     # # So, in the URL, we need to use the name of server container and the default (private) port. Ex 9090->8080
     url = "http://java-container:8080/car"
+    #url = "http://localhost:9090/car" #switched for using this app in localhost, connecting it to java-container
+    # for containerize the whole service, switch back to the upper URL
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
         resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
@@ -77,7 +87,7 @@ def create_request(car):
 def inject_data():
     start_time = time()
     pool_threads = ThreadPool(num_jobs)
-    list_results = pool_threads.map(create_request, create_list_cars())
+    list_results = pool_threads.map(create_request, create_list_cars(num_cars=get_car_number_from_url_parameter()))
     logging.info("END of Data Injection")
     logging.info("Duration of data Injection %s", time() - start_time)
     logging.info("Successful requests: %d", counter_success)
