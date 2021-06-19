@@ -16,6 +16,8 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./python-service
+    depends_on:
+      - java-service
     image: python-service:latest
     container_name: python-container
     #Setting PYTHONUNBUFFERED=TRUE or PYTHONUNBUFFERED=1 (they are equivalent)
