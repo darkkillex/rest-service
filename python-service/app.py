@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from time import time
 
 import requests
@@ -22,9 +23,25 @@ counter_ok = Value('i', 0)
 counter_success = 0
 counter_error = 0
 num_jobs = 10
-# num_cars = 100
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+
+def get_environment_variable(env_var_name):
+    #TODO Remember to set in the Environments Variables URL_ENV_VAR=http://localhost:9090/car
+
+    # Don't use localhost for the communication between container.
+    # DOCKER CONTAINER URL= "http://java-container:8080/car"
+    #   So, in the URL, we need to use the name of server container and the default (private) port. Ex 9090->8080
+    # PYCHARM URL= "http://localhost:9090/car"
+    #   it is used to connect it from Pycharm to java-container app or Intellij running app
+    #   N.B. for containerize the whole service, switch back to the upper DOCKER CONTAINER URL
+    env_var = os.getenv(env_var_name)
+    logging.info(f"Loading Environment Variable '{env_var_name}'")
+    if env_var is None:
+        logging.info(f"Environment variable {env_var_name} was not found. Returning empty string")
+        return ""
+    return str(env_var)
 
 
 def counter_increment(self):
@@ -53,14 +70,10 @@ def create_list_cars(num_cars):
 def create_request(car):
     global counter_success, counter_error
     counter_thread = counter_increment(counter)
-    # don't use localhost for the communication between container.
-    # # So, in the URL, we need to use the name of server container and the default (private) port. Ex 9090->8080
-    url = "http://java-container:8080/car"
-    #url = "http://localhost:9090/car"  # switched for using this app in localhost, connecting it to java-container
-    # for containerize the whole service, switch back to the upper URL
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
-        resp = requests.post(url, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
+        resp = requests.post(url=get_environment_variable('URL_ENV_VAR'),
+                             data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
     except (ReadTimeout, ConnectionError, HTTPError, Timeout) as e:
         logging.error("Injection N° %d FAILED. Exception occurs on data injection. "
                       "Technical details given below:", counter_thread)
@@ -93,7 +106,6 @@ def inject_data():
     except (ValueError, TypeError) as e:
         return {'Error message': 'wrong type parameter',
                 'Status code': 500}, 500
-
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
     logging.info("END of Data Injection")
@@ -105,3 +117,4 @@ def inject_data():
 
 if __name__ == '__main__':
     app.run()
+
