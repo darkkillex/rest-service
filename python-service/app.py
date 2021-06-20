@@ -5,7 +5,7 @@ from time import time
 import requests
 
 from requests import ReadTimeout, ConnectionError, HTTPError, Timeout
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, Response
 from faker import Faker
 from faker_vehicle import VehicleProvider
 from multiprocessing import Value, Lock
@@ -87,13 +87,15 @@ def get_car_number_from_url_parameter():
 @app.route('/injectdata')
 def inject_data():
     start_time = time()
+    #check if the number of cars passed in the parameter(...?cars=VALUE) is an integer
     try:
-        isinstance(get_car_number_from_url_parameter(), int)
+        number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
     except (ValueError, TypeError) as e:
         return {'Error message': 'wrong type parameter',
-                'Status code': 500}
+                'Status code': 500}, 500
+
     pool_threads = ThreadPool(num_jobs)
-    list_results = pool_threads.map(create_request, create_list_cars(num_cars=get_car_number_from_url_parameter()))
+    list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
     logging.info("END of Data Injection")
     logging.info("Duration of data Injection %s", time() - start_time)
     logging.info("Successful requests: %d", counter_success)
