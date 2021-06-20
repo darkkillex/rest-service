@@ -27,6 +27,7 @@ services:
     #relevant message due to the message being "stuck" in a buffer.
     environment:
        - PYTHONUNBUFFERED=1
+       - URL_ENV_VAR=http://java-container:8080/car
     ports:
       - "5000:5000"
     networks:
