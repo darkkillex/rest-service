@@ -23,7 +23,6 @@ counter_ok = Value('i', 0)
 counter_success = 0
 counter_error = 0
 num_jobs = 10
-URL_CONSTANT = ""
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
@@ -47,10 +46,20 @@ def get_environment_variable_for_url(env_var_name_1, env_var_name_2):
     return str(env_var_1 + ":" + env_var_2 + "/car")
 
 
+URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
+
+
 def counter_increment(self):
     with counter_lock:
         self.value += 1
     return self.value
+
+
+def log_ending_info_requests(string_kind_data_inj, start_time):
+    logging.info("END of Data Injection in %s", string_kind_data_inj)
+    logging.info("Duration of Data Injection in %s: %s", string_kind_data_inj, time() - start_time)
+    logging.info("Successful requests: %d", counter_success)
+    logging.info("Error requests occurred: %d", counter_error)
 
 
 def create_single_fake_car():
@@ -99,18 +108,9 @@ def get_car_number_from_url_parameter():
     return number_of_cars_parameter
 
 
-def log_ending_info_requests(string_kind_data_inj, start_time):
-    logging.info("END of Data Injection in %s", string_kind_data_inj)
-    logging.info("Duration of Data Injection in %s: %s", string_kind_data_inj, time() - start_time)
-    logging.info("Successful requests: %d", counter_success)
-    logging.info("Error requests occurred: %d", counter_error)
-
-
 @app.route('/injectdataparallel')
 def inject_data_in_parallel():
-    global URL_CONSTANT
     start_time = time()
-    URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
     except (ValueError, TypeError) as e:
@@ -123,10 +123,8 @@ def inject_data_in_parallel():
 
 
 @app.route('/injectdataseries')
-def inject_dat_in_series():
-    global URL_CONSTANT
+def inject_data_in_series():
     start_time = time()
-    URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
     #check if the number of cars passed in the parameter(...?cars=VALUE) is an integer
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
