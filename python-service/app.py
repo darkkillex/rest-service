@@ -113,8 +113,9 @@ def inject_data_in_parallel():
     start_time = time()
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
-    except (ValueError, TypeError) as e:
-        return {'Error message': 'wrong type parameter',
+    except ValueError as ve:
+        return {'Type Error': 'wrong type parameter',
+                'Error Message': str(ve),
                 'Status code': 500}, 500
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
@@ -128,8 +129,9 @@ def inject_data_in_series():
     #check if the number of cars passed in the parameter(...?cars=VALUE) is an integer
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
-    except (ValueError, TypeError) as e:
-        return {'Error message': 'wrong type parameter',
+    except ValueError as ve:
+        return {'Type Error': 'wrong type parameter',
+                'Error Message': str(ve),
                 'Status code': 500}, 500
     list_cars = create_list_cars(number_of_cars_passed_in_the_parameter)
     list_results = []
