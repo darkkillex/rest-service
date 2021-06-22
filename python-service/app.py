@@ -27,26 +27,20 @@ num_jobs = 10
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
-def get_environment_variable_for_url(env_var_name_1, env_var_name_2):
-    #TODO Remember to set in the Environments Variables "JAVA_SERVICE_URL":"JAVA_SERVICE_PORT"/car"
-
+#TODO Remember to set in the Environments Variables "JAVA_SERVICE_URL":"JAVA_SERVICE_PORT"/car"
+def get_environment_variable(env_var_name):
     # Don't use localhost for the communication between container.
     # DOCKER CONTAINER URL= "http://java-container:8080/car"
     #   So, in the URL, we need to use the name of server container and the default (private) port. Ex 9090->8080
     # PYCHARM URL= "http://localhost:9090/car"
     #   it is used to connect it from Pycharm to java-container app or Intellij running app
     #   N.B. for containerize the whole service, switch back to the upper DOCKER CONTAINER URL
-    env_var_1 = os.getenv(env_var_name_1)
-    env_var_2 = os.getenv(env_var_name_2)
-    logging.info(f"Loading URL Environment Variables '{env_var_name_1}' and '{env_var_name_2}'")
-    if env_var_1 is None or env_var_2 is None:
-        logging.info(f"Environment variable {env_var_name_1} or {env_var_name_2} "
-                     f"was/were not found. Returning empty string")
+    env_var = os.getenv(env_var_name)
+    logging.info(f"Loading URL Environment Variables '{env_var_name}'")
+    if env_var is None:
+        logging.info(f"Environment variable {env_var_name} was/were not found. Returning empty string")
         return ""
-    return str(env_var_1 + ":" + env_var_2 + "/car")
-
-
-URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
+    return str(env_var)
 
 
 def counter_increment(self):
@@ -84,7 +78,8 @@ def create_request(car):
     counter_thread = counter_increment(counter)
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
-        resp = requests.post(url=URL_CONSTANT, data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
+        resp = requests.post(url=JAVA_SERVICE_URL_ENVIRONMENT+":"+JAVA_SERVICE_PORT_ENVIRONMENT+"/car",
+                             data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
     except (ReadTimeout, ConnectionError, HTTPError, Timeout) as e:
         logging.error("Injection N° %d FAILED. Exception occurs on data injection. "
                       "Technical details given below:", counter_thread)
@@ -142,5 +137,7 @@ def inject_data_in_series():
 
 
 if __name__ == '__main__':
+    JAVA_SERVICE_URL_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_URL')
+    JAVA_SERVICE_PORT_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_PORT')
     app.run()
 
