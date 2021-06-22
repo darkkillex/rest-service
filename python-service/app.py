@@ -99,6 +99,13 @@ def get_car_number_from_url_parameter():
     return number_of_cars_parameter
 
 
+def log_ending_info_requests(string_kind_data_inj, start_time):
+    logging.info("END of Data Injection in %s", string_kind_data_inj)
+    logging.info("Duration of Data Injection in %s: %s", string_kind_data_inj, time() - start_time)
+    logging.info("Successful requests: %d", counter_success)
+    logging.info("Error requests occurred: %d", counter_error)
+
+
 @app.route('/injectdataparallel')
 def inject_data_in_parallel():
     global URL_CONSTANT
@@ -111,10 +118,7 @@ def inject_data_in_parallel():
                 'Status code': 500}, 500
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
-    logging.info("END of Data Injection in Parallel")
-    logging.info("Duration of Data Injection in Parallel %s", time() - start_time)
-    logging.info("Successful requests: %d", counter_success)
-    logging.info("Error requests occurred: %d", counter_error)
+    log_ending_info_requests('Parallel', start_time=start_time)
     return jsonify(list_results)
 
 
@@ -133,10 +137,7 @@ def inject_dat_in_series():
     list_results = []
     for car in list_cars:
         list_results.append(create_request(car))
-    logging.info("END of Data Injection in Series")
-    logging.info("Duration of Data Injection in Series %s", time() - start_time)
-    logging.info("Successful requests: %d", counter_success)
-    logging.info("Error requests occurred: %d", counter_error)
+    log_ending_info_requests('Series', start_time=start_time)
     return jsonify(list_results)
 
 
