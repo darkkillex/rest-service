@@ -29,7 +29,7 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
 def get_environment_variable_for_url(env_var_name_1, env_var_name_2):
-    #TODO Remember to set in the Environments Variables HOSTNAME_ENV_VAR:PORT_ENV_VAR/car
+    #TODO Remember to set in the Environments Variables "JAVA_SERVICE_URL":"JAVA_SERVICE_PORT"/car"
 
     # Don't use localhost for the communication between container.
     # DOCKER CONTAINER URL= "http://java-container:8080/car"
@@ -99,8 +99,27 @@ def get_car_number_from_url_parameter():
     return number_of_cars_parameter
 
 
-@app.route('/injectdata')
-def inject_data():
+@app.route('/injectdataparallel')
+def inject_data_in_parallel():
+    global URL_CONSTANT
+    start_time = time()
+    URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
+    try:
+        number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
+    except (ValueError, TypeError) as e:
+        return {'Error message': 'wrong type parameter',
+                'Status code': 500}, 500
+    pool_threads = ThreadPool(num_jobs)
+    list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
+    logging.info("END of Data Injection in Parallel")
+    logging.info("Duration of Data Injection in Parallel %s", time() - start_time)
+    logging.info("Successful requests: %d", counter_success)
+    logging.info("Error requests occurred: %d", counter_error)
+    return jsonify(list_results)
+
+
+@app.route('/injectdataseries')
+def inject_dat_in_series():
     global URL_CONSTANT
     start_time = time()
     URL_CONSTANT = get_environment_variable_for_url('JAVA_SERVICE_URL', 'JAVA_SERVICE_PORT')
@@ -110,10 +129,12 @@ def inject_data():
     except (ValueError, TypeError) as e:
         return {'Error message': 'wrong type parameter',
                 'Status code': 500}, 500
-    pool_threads = ThreadPool(num_jobs)
-    list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
-    logging.info("END of Data Injection")
-    logging.info("Duration of data Injection %s", time() - start_time)
+    list_cars = create_list_cars(number_of_cars_passed_in_the_parameter)
+    list_results = []
+    for car in list_cars:
+        list_results.append(create_request(car))
+    logging.info("END of Data Injection in Series")
+    logging.info("Duration of Data Injection in Series %s", time() - start_time)
     logging.info("Successful requests: %d", counter_success)
     logging.info("Error requests occurred: %d", counter_error)
     return jsonify(list_results)
