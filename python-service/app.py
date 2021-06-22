@@ -27,7 +27,7 @@ num_jobs = 10
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 
 
-#TODO Remember to set in the Environments Variables "JAVA_SERVICE_URL":"JAVA_SERVICE_PORT"/car"
+#TODO Remember to set in the Environments Variables for URL and PORT
 def get_environment_variable(env_var_name):
     # Don't use localhost for the communication between container.
     # DOCKER CONTAINER URL= "http://java-container:8080/car"
@@ -49,9 +49,9 @@ def counter_increment(self):
     return self.value
 
 
-def log_ending_info_requests(string_kind_data_inj, start_time):
-    logging.info("END of Data Injection in %s", string_kind_data_inj)
-    logging.info("Duration of Data Injection in %s: %s", string_kind_data_inj, time() - start_time)
+def log_ending_info_requests(string_type_data_inj, start_time):
+    logging.info("END of Data Injection in %s", string_type_data_inj)
+    logging.info("Duration of Data Injection in %s: %s", string_type_data_inj, time() - start_time)
     logging.info("Successful requests: %d", counter_success)
     logging.info("Error requests occurred: %d", counter_error)
 
@@ -115,7 +115,11 @@ def inject_data_in_parallel():
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
     log_ending_info_requests('Parallel', start_time=start_time)
-    return jsonify(list_results)
+    return jsonify({'Type of Injection': 'Series',
+                    'Last Duration request': time() - start_time,
+                    'Total Successful requests': counter_success,
+                    'Total Error requests': counter_error},
+                   list_results)
 
 
 @app.route('/injectdataseries')
@@ -133,7 +137,11 @@ def inject_data_in_series():
     for car in list_cars:
         list_results.append(create_request(car))
     log_ending_info_requests('Series', start_time=start_time)
-    return jsonify(list_results)
+    return jsonify({'Type of Injection': 'Series',
+                    'Last Duration request': time() - start_time,
+                    'Total Successful requests': counter_success,
+                    'Total Error requests': counter_error},
+                   list_results)
 
 
 if __name__ == '__main__':
