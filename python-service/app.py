@@ -31,8 +31,8 @@ logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
 def get_environment_variable(env_var_name):
     # Don't use localhost for the communication between container.
     # DOCKER CONTAINER URL= "http://java-container:8080/car"
-    #   So, in the URL, we need to use the name of server container and the default (private) port. Ex 9090->8080
-    # PYCHARM URL= "http://localhost:9090/car"
+    #   So, in the URL, we need to use the name of server container and the default (private) port. Ex 8080->8080
+    # PYCHARM URL= "http://localhost:8080/car"
     #   it is used to connect it from Pycharm to java-container app or Intellij running app
     #   N.B. for containerize the whole service, switch back to the upper DOCKER CONTAINER URL
     env_var = os.getenv(env_var_name)
