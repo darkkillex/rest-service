@@ -8,7 +8,7 @@ services:
     image: java-service:latest
     container_name: java-container
     ports:
-      - "9090:8080"
+      - "8080:8080"
     networks:
       - mynet
 
@@ -31,6 +31,26 @@ services:
        - JAVA_SERVICE_PORT=8080
     ports:
       - "5000:5000"
+    networks:
+      - mynet
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    hostname: prometheus
+    networks:
+      - mynet
+
+  grafana:
+    image: grafana/grafana
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
+    hostname: grafana
     networks:
       - mynet
 
