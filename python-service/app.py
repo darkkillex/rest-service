@@ -43,6 +43,10 @@ def get_environment_variable(env_var_name):
     return str(env_var)
 
 
+JAVA_SERVICE_URL_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_URL')
+JAVA_SERVICE_PORT_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_PORT')
+
+
 def counter_increment(self):
     with counter_lock:
         self.value += 1
@@ -78,7 +82,7 @@ def create_request(car):
     counter_thread = counter_increment(counter)
     headers = {'Content-type': 'application/json', 'Accept': 'application/json'}
     try:
-        resp = requests.post(url=JAVA_SERVICE_URL_ENVIRONMENT+":"+JAVA_SERVICE_PORT_ENVIRONMENT+"/car",
+        resp = requests.post(url=JAVA_SERVICE_URL_ENVIRONMENT + ":" + JAVA_SERVICE_PORT_ENVIRONMENT + "/car",
                              data=json.dumps(car, sort_keys=False), headers=headers, timeout=10)
     except (ReadTimeout, ConnectionError, HTTPError, Timeout) as e:
         logging.error("Injection N° %d FAILED. Exception occurs on data injection. "
@@ -115,7 +119,7 @@ def inject_data_in_parallel():
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
     log_ending_info_requests('Parallel', start_time=start_time)
-    return jsonify({'Type of Injection': 'Series',
+    return jsonify({'Type of Injection': 'Parallel',
                     'Last Duration request': time() - start_time,
                     'Total Successful requests': counter_success,
                     'Total Error requests': counter_error},
@@ -145,7 +149,5 @@ def inject_data_in_series():
 
 
 if __name__ == '__main__':
-    JAVA_SERVICE_URL_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_URL')
-    JAVA_SERVICE_PORT_ENVIRONMENT = get_environment_variable('JAVA_SERVICE_PORT')
     app.run()
 
