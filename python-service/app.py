@@ -4,6 +4,7 @@ import os
 from time import time
 
 import requests
+import prometheus_client
 
 from requests import ReadTimeout, ConnectionError, HTTPError, Timeout
 from flask import Flask, jsonify, request, Response
@@ -11,6 +12,8 @@ from faker import Faker
 from faker_vehicle import VehicleProvider
 from multiprocessing import Value, Lock
 from multiprocessing.pool import ThreadPool
+from prometheus_client.core import CollectorRegistry
+from prometheus_client import Summary, Counter, Histogram, Gauge
 
 app = Flask(__name__)
 
@@ -25,6 +28,16 @@ counter_error = 0
 num_jobs = 10
 
 logging.basicConfig(format='%(asctime)s - %(message)s', level=logging.INFO)
+
+#Metrics
+dict_metrics = {'c_p': Counter('python_counter_request_injection_in_parallel',
+                               'Total number of data injection in parallel requests'),
+                'c_s': Counter('python_counter_request_injection_in_series',
+                               'Total number of data injection in series requests'),
+                'h_p': Histogram('python_duration_request_injection_in_parallel',
+                                 'Duration of data injection in parallel requests'),
+                'h_s': Histogram('python_duration_request_injection_in_series',
+                                 'Duration of data injection in series requests')}
 
 
 #TODO Remember to set in the Environments Variables for URL and PORT
@@ -110,6 +123,7 @@ def get_car_number_from_url_parameter():
 @app.route('/injectdataparallel')
 def inject_data_in_parallel():
     start_time = time()
+    dict_metrics['c_p'].inc()
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
     except ValueError as ve:
@@ -119,6 +133,7 @@ def inject_data_in_parallel():
     pool_threads = ThreadPool(num_jobs)
     list_results = pool_threads.map(create_request, create_list_cars(num_cars=number_of_cars_passed_in_the_parameter))
     log_ending_info_requests('Parallel', start_time=start_time)
+    dict_metrics['h_p'].observe(time() - start_time)
     return jsonify({'Type of Injection': 'Parallel',
                     'Last Duration request': time() - start_time,
                     'Total Successful requests': counter_success,
@@ -129,6 +144,7 @@ def inject_data_in_parallel():
 @app.route('/injectdataseries')
 def inject_data_in_series():
     start_time = time()
+    dict_metrics['c_s'].inc()
     #check if the number of cars passed in the parameter(...?cars=VALUE) is an integer
     try:
         number_of_cars_passed_in_the_parameter = get_car_number_from_url_parameter()
@@ -141,11 +157,20 @@ def inject_data_in_series():
     for car in list_cars:
         list_results.append(create_request(car))
     log_ending_info_requests('Series', start_time=start_time)
+    dict_metrics['h_s'].observe(time() - start_time)
     return jsonify({'Type of Injection': 'Series',
                     'Last Duration request': time() - start_time,
                     'Total Successful requests': counter_success,
                     'Total Error requests': counter_error},
                    list_results)
+
+
+@app.route("/metrics")
+def custom_metrics():
+    res = []
+    for k, v in dict_metrics.items():
+        res.append(prometheus_client.generate_latest(v))
+    return Response(res, mimetype="text/plain")
 
 
 if __name__ == '__main__':
