@@ -1,46 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_JAVA-SERVICE_PROMETHEUS",
-      "label": "java-service_Prometheus",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "prometheus",
-      "pluginName": "Prometheus"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "8.0.3"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph (old)",
-      "version": ""
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "stat",
-      "name": "Stat",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -55,7 +13,7 @@
         "type": "dashboard"
       },
       {
-        "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+        "datasource": "Prometheus",
         "enable": true,
         "expr": "resets(process_uptime_seconds{application=\"$application\", instance=\"$instance\"}[1m]) > 0",
         "iconColor": "rgba(255, 96, 96, 1)",
@@ -72,8 +30,8 @@
   "editable": true,
   "gnetId": 4701,
   "graphTooltip": 1,
-  "id": null,
-  "iteration": 1624635411990,
+  "id": 1,
+  "iteration": 1625253989384,
   "links": [],
   "panels": [
     {
@@ -93,7 +51,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -153,7 +111,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "targets": [
         {
           "expr": "process_uptime_seconds{application=\"$application\", instance=\"$instance\"}",
@@ -170,7 +128,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -229,7 +187,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "targets": [
         {
           "expr": "process_start_time_seconds{application=\"$application\", instance=\"$instance\"}*1000",
@@ -246,7 +204,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -310,7 +268,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "targets": [
         {
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"heap\"})",
@@ -326,7 +284,7 @@
     },
     {
       "cacheTimeout": null,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -400,7 +358,7 @@
         "text": {},
         "textMode": "auto"
       },
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "targets": [
         {
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
@@ -482,8 +440,8 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
+        "h": 6,
+        "w": 8,
         "x": 0,
         "y": 5
       },
@@ -540,7 +498,7 @@
           "refId": "E"
         }
       ],
-      "title": "COUNTER",
+      "title": "Counter - java-service",
       "type": "timeseries"
     },
     {
@@ -596,9 +554,9 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
+        "h": 6,
+        "w": 8,
+        "x": 8,
         "y": 5
       },
       "id": 141,
@@ -653,7 +611,97 @@
           "refId": "E"
         }
       ],
-      "title": "TIMER MAX (Ms)",
+      "title": "Timer Max (Ms) - java-service",
+      "type": "timeseries"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 143,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "python_duration_request_injection_in_series_sum{}",
+          "instant": false,
+          "interval": "",
+          "legendFormat": "In Series (sec)",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "python_duration_request_injection_in_parallel_sum{}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "In Parallel (sec)",
+          "refId": "B"
+        }
+      ],
+      "title": "Duration Requests - python-service",
       "type": "timeseries"
     },
     {
@@ -661,14 +709,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 13
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 111,
@@ -689,7 +737,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -756,14 +804,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 13
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 112,
@@ -784,7 +832,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -848,14 +896,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 13
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 113,
@@ -876,7 +924,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -948,7 +996,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "description": "",
       "fill": 1,
       "fillGradient": 0,
@@ -956,7 +1004,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 13
+        "y": 11
       },
       "hiddenSeries": false,
       "id": 119,
@@ -978,7 +1026,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1084,7 +1132,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 18
       },
       "id": 127,
       "panels": [],
@@ -1097,7 +1145,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -1114,7 +1162,7 @@
         "h": 7,
         "w": 6,
         "x": 0,
-        "y": 21
+        "y": 19
       },
       "hiddenSeries": false,
       "id": 24,
@@ -1135,7 +1183,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1223,7 +1271,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -1240,7 +1288,7 @@
         "h": 7,
         "w": 6,
         "x": 6,
-        "y": 21
+        "y": 19
       },
       "hiddenSeries": false,
       "id": 25,
@@ -1261,7 +1309,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1350,7 +1398,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -1367,7 +1415,7 @@
         "h": 7,
         "w": 6,
         "x": 12,
-        "y": 21
+        "y": 19
       },
       "hiddenSeries": false,
       "id": 26,
@@ -1389,7 +1437,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1477,7 +1525,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -1494,7 +1542,7 @@
         "h": 7,
         "w": 6,
         "x": 18,
-        "y": 21
+        "y": 19
       },
       "hiddenSeries": false,
       "id": 86,
@@ -1515,7 +1563,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -1611,7 +1659,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 28
+        "y": 26
       },
       "id": 128,
       "panels": [
@@ -1620,7 +1668,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1748,7 +1796,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -1866,7 +1914,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2010,7 +2058,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "fill": 1,
           "fillGradient": 0,
           "gridPos": {
@@ -2109,7 +2157,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2235,7 +2283,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2364,7 +2412,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 29
+        "y": 27
       },
       "id": 129,
       "panels": [
@@ -2373,7 +2421,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2518,7 +2566,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 28
       },
       "id": 130,
       "panels": [
@@ -2527,7 +2575,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -2672,7 +2720,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 29
       },
       "id": 131,
       "panels": [],
@@ -2685,14 +2733,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 32
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 98,
@@ -2713,7 +2761,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2777,14 +2825,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 32
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 101,
@@ -2805,7 +2853,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2879,14 +2927,14 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 32
+        "y": 30
       },
       "hiddenSeries": false,
       "id": 99,
@@ -2907,7 +2955,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "8.0.3",
+      "pluginVersion": "8.0.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -2981,7 +3029,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 37
       },
       "id": 132,
       "panels": [
@@ -2990,7 +3038,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3100,7 +3148,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3220,7 +3268,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 40
+        "y": 38
       },
       "id": 133,
       "panels": [
@@ -3229,7 +3277,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3348,7 +3396,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3459,7 +3507,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3578,7 +3626,7 @@
           "bars": false,
           "dashLength": 10,
           "dashes": false,
-          "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+          "datasource": "Prometheus",
           "editable": true,
           "error": false,
           "fill": 1,
@@ -3698,8 +3746,13 @@
     "list": [
       {
         "allValue": null,
-        "current": {},
-        "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+        "current": {
+          "isNone": true,
+          "selected": false,
+          "text": "None",
+          "value": ""
+        },
+        "datasource": "Prometheus",
         "definition": "",
         "description": null,
         "error": null,
@@ -3725,8 +3778,12 @@
       {
         "allFormat": "glob",
         "allValue": null,
-        "current": {},
-        "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+        "current": {
+          "selected": false,
+          "text": "java-service:8080",
+          "value": "java-service:8080"
+        },
+        "datasource": "Prometheus",
         "definition": "",
         "description": null,
         "error": null,
@@ -3753,8 +3810,12 @@
       {
         "allFormat": "glob",
         "allValue": null,
-        "current": {},
-        "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
         "definition": "",
         "description": null,
         "error": null,
@@ -3781,8 +3842,12 @@
       {
         "allFormat": "glob",
         "allValue": null,
-        "current": {},
-        "datasource": "${DS_JAVA-SERVICE_PROMETHEUS}",
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "Prometheus",
         "definition": "",
         "description": null,
         "error": null,
@@ -3839,7 +3904,7 @@
     ]
   },
   "timezone": "browser",
-  "title": "java-service_dashboard (Micrometer)",
-  "uid": "5SIJaMznk",
-  "version": 3
+  "title": "rest-service_dashboard (Micrometer)",
+  "uid": "-tK5myz7k",
+  "version": 2
 }
