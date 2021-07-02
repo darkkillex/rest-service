@@ -12,3 +12,8 @@ scrape_configs:
       metrics_path: '/actuator/prometheus'
       static_configs:
           - targets: ['java-service:8080']
+
+    - job_name: 'python_service_metrics'
+      metrics_path: '/metrics'
+      static_configs:
+          - targets: ['python-service:5000']
