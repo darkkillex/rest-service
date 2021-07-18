@@ -34,31 +34,20 @@ public class RequestResponseLoggingFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) response;
         chain.doFilter(request, response);
         logger.info("Logging Request  {} : {}", req.getMethod(), req.getRequestURI());
-        String methodName = req.getMethod();
-        String uriName = req.getRequestURI();
-        int statusCodeName = res.getStatus();
+        countMyCustomMetrics(req, res);
+    }
+
+
+    public void countMyCustomMetrics(HttpServletRequest request, HttpServletResponse response) {
+        String methodName = request.getMethod();
+        String uriName = request.getRequestURI();
+        int statusCodeName = response.getStatus();
         Tag methodTag = Tag.of("method", methodName);
         Tag uriTag = Tag.of("uri", uriName);
         Tag statusCodeTag = Tag.of("statusCode", String.valueOf(statusCodeName));
         ImmutableList<Tag> tags = ImmutableList.of(methodTag, uriTag, statusCodeTag);
         meterRegistry.counter("custom-metric-filter-req-res", tags).increment();
-        }
-
-
-
-
-
-
-//        if (req.getMethod().equals("POST") &&
-//                (res.getStatus() == 201 || res.getStatus() == 200)) {
-//            meterRegistry.counter("custom_counter_request").increment();
-//        }
-//
-//        Gauge gaugePOST = Gauge.builder("mario_gauge", list, List::size)
-//                .strongReference(true)
-//                .register(meterRegistry);
-//        logger.info(String.valueOf(gaugePOST.value()));
-//        logger.info("Logging Response :{} - Status Code: {}", res.getContentType(), res.getStatus());
+    }
 
 }
 
