@@ -1,5 +1,7 @@
 package com.example.restservice;
 
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import com.google.common.collect.ImmutableList;
@@ -13,6 +15,10 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 
 @Component
@@ -23,6 +29,8 @@ public class RequestResponseLoggingFilter implements Filter {
 
     @Autowired
     private MeterRegistry meterRegistry;
+    private List<String> queueRequest = new ArrayList<>();
+
 
     @Override
     public void doFilter(
@@ -32,8 +40,14 @@ public class RequestResponseLoggingFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
+        queueRequest.add("1");
         chain.doFilter(request, response);
-        logger.info("Logging Request  {} : {}", req.getMethod(), req.getRequestURI());
+        queueRequest.remove("1");
+        //logger.info("Logging Request  {} : {}", req.getMethod(), req.getRequestURI());
+        Gauge gauge = Gauge.builder("queue.requests", queueRequest, List::size)
+                .strongReference(true)
+                .register(meterRegistry);
+        logger.info("****GAUGE  {}: ", gauge.value());
         countMyCustomMetrics(req, res);
     }
 
@@ -48,6 +62,7 @@ public class RequestResponseLoggingFilter implements Filter {
         ImmutableList<Tag> tags = ImmutableList.of(methodTag, uriTag, statusCodeTag);
         meterRegistry.counter("custom-metric-filter-req-res", tags).increment();
     }
+
 
 }
 
