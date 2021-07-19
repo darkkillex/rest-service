@@ -1,10 +1,8 @@
 package com.example.restservice;
 
 import io.micrometer.core.instrument.Gauge;
-import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 @Component
@@ -53,13 +49,16 @@ public class RequestResponseLoggingFilter implements Filter {
 
 
     public void countMyCustomMetrics(HttpServletRequest request, HttpServletResponse response) {
+        List<Tag> tags = new ArrayList<>();
         String methodName = request.getMethod();
         String uriName = request.getRequestURI();
         int statusCodeName = response.getStatus();
         Tag methodTag = Tag.of("method", methodName);
         Tag uriTag = Tag.of("uri", uriName);
         Tag statusCodeTag = Tag.of("statusCode", String.valueOf(statusCodeName));
-        ImmutableList<Tag> tags = ImmutableList.of(methodTag, uriTag, statusCodeTag);
+        tags.add(methodTag);
+        tags.add(uriTag);
+        tags.add(statusCodeTag);
         meterRegistry.counter("custom-metric-filter-req-res", tags).increment();
     }
 
