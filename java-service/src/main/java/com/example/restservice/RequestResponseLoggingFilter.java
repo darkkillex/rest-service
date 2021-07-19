@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 @Component
@@ -25,7 +26,7 @@ public class RequestResponseLoggingFilter implements Filter {
 
     @Autowired
     private MeterRegistry meterRegistry;
-    private List<String> queueRequest = new ArrayList<>();
+    private final AtomicLong queueRequest = new AtomicLong();
 
 
     @Override
@@ -36,11 +37,11 @@ public class RequestResponseLoggingFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
-        queueRequest.add("1");
+        queueRequest.incrementAndGet();
         chain.doFilter(request, response);
-        queueRequest.remove("1");
+        queueRequest.decrementAndGet();
         //logger.info("Logging Request  {} : {}", req.getMethod(), req.getRequestURI());
-        Gauge gauge = Gauge.builder("queue.requests", queueRequest, List::size)
+        Gauge gauge = Gauge.builder("queue.requests", queueRequest, queueRequest-> queueRequest.get())
                 .strongReference(true)
                 .register(meterRegistry);
         logger.info("****GAUGE  {}: ", gauge.value());
