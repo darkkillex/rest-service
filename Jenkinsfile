@@ -26,10 +26,12 @@ pipeline {
                 echo 'Testing..'
             }
         }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-                dockerImage.push('latest')
+        stage('Deploy Image') {
+            steps{
+              echo 'Deploying..'
+                script {
+                    dockerImage.push('latest')
+                }
             }
         }
     }
