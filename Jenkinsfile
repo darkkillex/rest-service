@@ -4,6 +4,7 @@ pipeline {
     imagename = "rest-service/java-service"
     dockerImage = ''
   }
+
   agent any
 
   stages {
@@ -16,7 +17,7 @@ pipeline {
         stage('Building image') {
           steps{
             script {
-              dockerImage = docker.build imagename
+              dockerImage = docker.build(imagename)
             }
           }
         }
@@ -28,6 +29,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying....'
+                dockerImage.push('latest')
             }
         }
     }
