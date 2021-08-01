@@ -1,7 +1,7 @@
 pipeline {
 
   environment {
-    imagename = "rest-service/java-service"
+    imagename = "java-service"
     dockerImage = ''
   }
 
